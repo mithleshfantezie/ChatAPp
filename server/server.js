@@ -2,7 +2,7 @@ var port = process.env.PORT || 3000;
 const path = require('path');
 const http = require('http');
 const express = require('express');
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const socketIO = require('socket.io');
 
@@ -23,7 +23,9 @@ console.log('New User Connected');
   socket.emit('newMessage',generateMessage('Admin','Welcome to the Chat App'));
   socket.broadcast.emit('newMessage',generateMessage('Admin','New User Joined'));
 
-
+socket.on('createLocationMessage',(coords)=>{
+  io.emit('newLocationMessage', generateLocationMessage('Admin',coords.latitude,coords.longitude));
+});
 
 
   socket.on('createMessage',(message, callback)=>{
@@ -48,4 +50,6 @@ callback('this is from server');
 
 server.listen(port,()=>{
   console.log(`Server running on port ${port} `);
-})
+});
+
+// https://www.google.com/maps?q=26.5666132,88.0684814
