@@ -43,12 +43,16 @@ socket.on('disconnect',function (){
   console.log('Disconnected');
   });
 
-socket.on('updateUserList', function (user){
-var params = jQuery.deparam(window.location.search);
-  var li = jQuery('<li></li>');
-  li.text(params.name);
 
-  jQuery('#userss').append(li);
+
+socket.on('updateUserList', function (users){
+var params = jQuery.deparam(window.location.search);
+  var ol = jQuery('<ol></ol>');
+
+users.forEach(function (user){
+  ol.append(jQuery('<li></li>').text(user));
+});
+  jQuery('#users').html(ol);
 });
 
 
@@ -78,7 +82,7 @@ jQuery('#message-form').on('submit', function (e){
   var params = jQuery.deparam(window.location.search);
   e.preventDefault();
   socket.emit('createMessage',{
-    from: params.name,
+  
     text: messageTextBox.val()
   },function () {
     messageTextBox.val('')
