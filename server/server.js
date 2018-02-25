@@ -45,8 +45,9 @@ var members = users.getUserList(params.room);
 
 io.to(params.room).emit('updateUserList', users.getUserList(params.room));
 socket.emit('newMessage',generateMessage('Admin','Welcome to the Chat App'));
-io.to(params.room).emit('newMessage',generateMessage('Admin', `Currently in the Room: ${members}`));
+
 socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} User Joined`));
+io.to(params.room).emit('newMessage',generateMessage('Admin', `Currently in the Room: ${members}.`));
 
 callback();
 });
