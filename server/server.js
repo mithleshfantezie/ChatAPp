@@ -40,8 +40,12 @@ socket.join(params.room);
 users.removeUser(socket.id);
 users.addUser(socket.id,params.name,params.room);
 
+var members = users.getUserList(params.room);
+
+
 io.to(params.room).emit('updateUserList', users.getUserList(params.room));
 socket.emit('newMessage',generateMessage('Admin','Welcome to the Chat App'));
+io.to(params.room).emit('newMessage',generateMessage('Admin', `Currently in the Room: ${members}`));
 socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} User Joined`));
 
 callback();
@@ -71,6 +75,8 @@ callback();
   if(user) {
     io.to(user.room).emit('updateUserList',users.getUserList(user.room));
     io.to(user.room).emit('newMessage',generateMessage('Admin', `${user.name} has left.`));
+    var members = users.getUserList(user.room);
+    io.to(user.room).emit('newMessage',generateMessage('Admin', `Currently in the Room: ${members}.`));
   }
   });
 });
