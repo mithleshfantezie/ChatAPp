@@ -77,14 +77,16 @@ scrollToButtom ();
 
 
 var messageTextBox = jQuery('[name=message]');
-
+var SendButton = jQuery('#send-message');
 jQuery('#message-form').on('submit', function (e){
+  SendButton.attr('disabled', 'disabled').text('Sending Message...');
   var params = jQuery.deparam(window.location.search);
   e.preventDefault();
   socket.emit('createMessage',{
-  
+
     text: messageTextBox.val()
   },function () {
+    SendButton.removeAttr('disabled').text('Send');
     messageTextBox.val('')
   });
 });
